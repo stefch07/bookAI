@@ -1,416 +1,581 @@
-import { useState, type FormEvent } from 'react';
+import { FormEvent, useState } from 'react';
 
-const services = [
-  {
-    title: 'Websites',
-    description:
-      'Clean one-page or multi-page websites that explain your services clearly, build trust fast, and make it easy for visitors to contact you.',
-  },
-  {
-    title: 'Booking Systems',
-    description:
-      'Appointment flows that help website visitors, phone leads, and DM inquiries move from interest to a booked conversation.',
-  },
-  {
-    title: 'AI Receptionist',
-    description:
-      'AI receptionists that reply to missed calls, Instagram DMs, and after-hours inquiries while collecting the details needed to book the next step.',
-  },
-  {
-    title: 'SEO & Maintenance',
-    description:
-      'Ongoing support for search visibility, content updates, and small site improvements that keep your presence sharp.',
-  },
-  {
-    title: 'Complete Booking Presence',
-    description:
-      'A complete setup that combines a service-focused website, booking flow, SEO, and AI support so more people move from interest to appointment.',
-  },
+type Card = {
+  title: string;
+  text: string;
+};
+
+type Service = {
+  title: string;
+  price: string;
+  text: string;
+  points: string[];
+};
+
+type Step = {
+  number: string;
+  title: string;
+  text: string;
+};
+
+type FAQ = {
+  question: string;
+  answer: string;
+};
+
+const navLinks = [
+  { label: 'Services', href: '#services' },
+  { label: 'Process', href: '#process' },
+  { label: 'AI Receptionist', href: '#ai-receptionist' },
+  { label: 'Contact', href: '#contact' }
 ];
 
-const audiences = [
-  'Barbershops',
-  'Dentists and dental clinics',
-  'Beauty salons',
-  'Massage studios',
-  'Spas and wellness centers',
-  'Medical and aesthetic clinics',
-  'Fitness studios and personal trainers',
-  'Tutors',
-  'Car services',
-  'Restaurants with reservations',
-  'Other appointment-based local businesses',
-];
-
-const steps = [
-  'Learn how customers find you today, from Google searches to DMs and missed calls.',
-  'Build the right setup for your goals, whether that is a website, an AI receptionist, or both.',
-  'Launch with clear service pages, trust signals, and a simple path to contact or book.',
-  'Improve response speed and booking performance as your business grows.',
-];
-
-const trustPoints = [
-  'Built for Greek businesses that rely on appointments and repeat visits.',
-  'Focused on one result: fewer missed leads and more booked conversations.',
-  'Simple to understand, easy to manage, and designed to convert.',
+const proofChips = [
+  'Built for appointment businesses',
+  'Website + AI setup',
+  'Greek-market focused',
+  'Fast first version'
 ];
 
 const stats = [
   'Fast launch',
-  'Built for appointment businesses',
   'Website + AI setup',
-  'Greek & English support',
+  'Built for bookings',
+  'Greek & English support'
 ];
 
-const faqs = [
+const problems: Card[] = [
   {
-    question: 'Do I need to already have a website?',
-    answer: 'No. BookAgent.gr can help you launch your first professional website.',
+    title: 'Outdated or unclear websites',
+    text: 'Visitors arrive interested, but leave when services, trust signals, or next steps are hard to understand.'
   },
   {
-    question: 'Can you improve my existing website?',
-    answer: 'Yes. We can improve or rebuild your current site with a cleaner design and better structure.',
+    title: 'Busy teams miss conversations',
+    text: 'Customers call, send DMs, or ask questions while your team is serving someone else.'
+  },
+  {
+    title: 'Replies arrive too late',
+    text: 'When inquiries wait until the next day, the customer may already have booked somewhere else.'
+  },
+  {
+    title: 'Booking feels harder than it should',
+    text: 'People move fast. If appointment requests are not simple, clear, and convenient, interest disappears.'
+  }
+];
+
+const reasons: Card[] = [
+  {
+    title: 'Built to convert',
+    text: 'Clear messaging, focused page structure, and strong calls-to-action designed around real appointment requests.'
+  },
+  {
+    title: 'Website + booking flow',
+    text: 'A professional website that guides visitors from services and trust-building content toward contacting or booking.'
+  },
+  {
+    title: 'AI support after hours',
+    text: 'AI assistance can help answer common questions, collect details, and keep new inquiries moving.'
+  }
+];
+
+const services: Service[] = [
+  {
+    title: 'Website Presence',
+    price: 'From €___',
+    text: 'A clean one-page website for businesses that need a professional online presence.',
+    points: ['Responsive one-page design', 'Service overview', 'Contact-focused layout']
+  },
+  {
+    title: 'Website + Booking Flow',
+    price: 'Custom quote',
+    text: 'A website structured around services, trust, contact, and appointment requests.',
+    points: ['Conversion-focused sections', 'Booking request flow', 'Trust and FAQ content']
+  },
+  {
+    title: 'AI Receptionist Setup',
+    price: 'Custom quote',
+    text: 'AI support that helps answer FAQs, collect details, and handle booking requests.',
+    points: ['FAQ handling', 'Lead detail collection', 'After-hours inquiry support']
+  },
+  {
+    title: 'Complete BookAgent Setup',
+    price: 'Custom quote',
+    text: 'Website, booking flow, AI receptionist, and launch support together.',
+    points: ['Website build', 'AI receptionist setup', 'Launch and improvement support']
+  }
+];
+
+const industries = [
+  'Barbershops',
+  'Dentists',
+  'Beauty salons',
+  'Spas',
+  'Aesthetic clinics',
+  'Fitness studios',
+  'Tutors',
+  'Car services',
+  'Restaurants with reservations',
+  'Wellness studios'
+];
+
+const steps: Step[] = [
+  {
+    number: '01',
+    title: 'Consultation',
+    text: 'We understand your business, services, customers, and current booking flow.'
+  },
+  {
+    number: '02',
+    title: 'Website & Booking Flow',
+    text: 'We design the page structure, messaging, and customer journey.'
+  },
+  {
+    number: '03',
+    title: 'AI Receptionist Setup',
+    text: 'We configure AI support for common questions, lead capture, and appointment requests.'
+  },
+  {
+    number: '04',
+    title: 'Launch & Support',
+    text: 'We launch, test, and improve the setup as your business grows.'
+  }
+];
+
+const aiFeatures = [
+  'Missed calls',
+  'Instagram and message inquiries',
+  'Common customer questions',
+  'Appointment requests',
+  'After-hours leads',
+  'Basic customer information'
+];
+
+const faqs: FAQ[] = [
+  {
+    question: 'Do I need an existing website?',
+    answer:
+      'No. BookAgent.gr can create a new landing page or website from scratch based on your business, services, and appointment flow.'
+  },
+  {
+    question: 'Can you improve my current website?',
+    answer:
+      'Yes. If you already have a website, we can review the structure, messaging, contact flow, and booking experience, then improve what matters most.'
   },
   {
     question: 'What is an AI receptionist?',
-    answer: 'An AI receptionist is a digital assistant that can help answer customer questions, collect details, and support your business when you are unavailable.',
+    answer:
+      'An AI receptionist is a digital assistant that can help respond to common questions, collect customer details, and support appointment requests when your team is busy or unavailable.'
   },
   {
-    question: 'Do I need to know anything about AI?',
-    answer: 'No. Everything is set up for you in a simple, business-friendly way.',
+    question: 'Can it work for Greek businesses?',
+    answer:
+      'Yes. The setup is designed for appointment-based businesses in Greece and can support Greek and English communication depending on your needs.'
   },
+  {
+    question: 'Do I need to understand AI?',
+    answer:
+      'No. The goal is to keep the setup simple. We handle the structure and configuration so your business can use it without needing technical knowledge.'
+  },
+  {
+    question: 'How much does it cost?',
+    answer:
+      'Pricing depends on the website scope, booking flow, AI receptionist needs, and launch support. The first step is a free consultation to understand what your business actually needs.'
+  }
 ];
 
-const leadStorageKey = 'bookagent-leads';
-
 function App() {
-  const [submissionState, setSubmissionState] = useState<'idle' | 'success'>('idle');
+  const [submitted, setSubmitted] = useState(false);
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-
-    const formData = new FormData(event.currentTarget);
-    const submission = {
-      name: String(formData.get('name') ?? '').trim(),
-      businessName: String(formData.get('businessName') ?? '').trim(),
-      email: String(formData.get('email') ?? '').trim(),
-      phone: String(formData.get('phone') ?? '').trim(),
-      businessType: String(formData.get('businessType') ?? '').trim(),
-      service: String(formData.get('service') ?? '').trim(),
-      message: String(formData.get('message') ?? '').trim(),
-      createdAt: new Date().toISOString(),
-    };
-
-    try {
-      const storedSubmissions = JSON.parse(localStorage.getItem(leadStorageKey) ?? '[]') as typeof submission[];
-      storedSubmissions.unshift(submission);
-      localStorage.setItem(leadStorageKey, JSON.stringify(storedSubmissions.slice(0, 25)));
-      event.currentTarget.reset();
-      setSubmissionState('success');
-    } catch {
-      setSubmissionState('success');
-    }
+    setSubmitted(true);
   }
 
   return (
-    <div className="page-shell">
-      <header className="hero">
-        <nav className="topbar" aria-label="Primary">
-          <div className="brand">
-            <span className="brand-mark">BA</span>
-            <span>BookAgent.gr</span>
+    <div className="site-shell">
+      <header className="site-header">
+        <nav className="nav container" aria-label="Primary navigation">
+          <a className="logo" href="#top" aria-label="BookAgent.gr home">
+            BookAgent.gr
+          </a>
+
+          <div className="nav-links" aria-label="Page sections">
+            {navLinks.map((link) => (
+              <a key={link.href} href={link.href}>
+                {link.label}
+              </a>
+            ))}
           </div>
+
           <a className="nav-cta" href="#contact">
             Request a Free Consultation
           </a>
         </nav>
+      </header>
 
-        <div className="hero-grid">
-          <div className="hero-copy">
-            <p className="eyebrow">Your Business, Booked Smarter</p>
-            <h1>Websites & AI receptionists that turn visitors, missed calls and DMs into booked appointments.</h1>
-            <p className="lede">
-              BookAgent.gr helps clinics, salons, barbershops, wellness studios, and service businesses create a
-              sharper online presence and faster customer response. We build the website, structure the booking flow,
-              and add AI support so more people take the next step.
-            </p>
-            <div className="hero-actions">
-              <a className="button button-primary" href="#contact">
-                Request a Free Consultation
-              </a>
-              <a className="button button-secondary" href="#services">
-                See How It Works
-              </a>
+      <main id="top">
+        <section className="hero section">
+          <div className="container hero-grid">
+            <div className="hero-content">
+              <p className="eyebrow">Modern booking systems for Greek appointment businesses</p>
+
+              <h1>Websites & AI receptionists that turn interest into booked appointments.</h1>
+
+              <p className="hero-subtitle">
+                BookAgent.gr helps appointment-based businesses look professional online,
+                respond faster, and stop losing leads from missed calls, DMs, and after-hours
+                inquiries.
+              </p>
+
+              <div className="hero-actions" aria-label="Hero actions">
+                <a className="button button-primary" href="#contact">
+                  Request a Free Consultation
+                </a>
+                <a className="button button-secondary" href="#process">
+                  See How It Works
+                </a>
+              </div>
+
+              <div className="proof-chips" aria-label="BookAgent proof points">
+                {proofChips.map((chip) => (
+                  <span key={chip}>{chip}</span>
+                ))}
+              </div>
             </div>
-            <div className="trust-strip" aria-label="Trust points">
-              {trustPoints.map((point) => (
-                <span className="trust-chip" key={point}>
-                  {point}
+
+            <aside className="hero-card" aria-label="Booking flow visual">
+              <div className="hero-card-header">
+                <span className="status-dot" aria-hidden="true" />
+                <span>Live inquiry flow</span>
+              </div>
+
+              <div className="flow-card">
+                <div>
+                  <span className="flow-label">Step 1</span>
+                  <strong>Website</strong>
+                </div>
+                <span aria-hidden="true">→</span>
+              </div>
+
+              <div className="flow-card">
+                <div>
+                  <span className="flow-label">Step 2</span>
+                  <strong>Inquiry</strong>
+                </div>
+                <span aria-hidden="true">→</span>
+              </div>
+
+              <div className="flow-card highlight">
+                <div>
+                  <span className="flow-label">Step 3</span>
+                  <strong>AI Receptionist</strong>
+                </div>
+                <span aria-hidden="true">→</span>
+              </div>
+
+              <div className="flow-card final">
+                <div>
+                  <span className="flow-label">Step 4</span>
+                  <strong>Booked Appointment</strong>
+                </div>
+                <span className="check" aria-hidden="true">
+                  ✓
                 </span>
+              </div>
+            </aside>
+          </div>
+        </section>
+
+        <section className="stats-strip" aria-label="BookAgent approach">
+          <div className="container stats-grid">
+            {stats.map((stat) => (
+              <div key={stat} className="stat-item">
+                {stat}
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section className="section problem-section">
+          <div className="container">
+            <div className="section-heading">
+              <p className="eyebrow">The problem</p>
+              <h2>Many businesses lose leads before they ever become appointments.</h2>
+              <p>
+                A customer may be ready to book, but small gaps in your online presence or response
+                flow can send them to the next option.
+              </p>
+            </div>
+
+            <div className="card-grid four">
+              {problems.map((problem) => (
+                <article className="info-card" key={problem.title}>
+                  <h3>{problem.title}</h3>
+                  <p>{problem.text}</p>
+                </article>
               ))}
             </div>
-            <div className="hero-stats" aria-label="Key stats">
-              {stats.map((stat) => (
-                <div className="hero-stat" key={stat}>
-                  {stat}
+          </div>
+        </section>
+
+        <section className="section why-section">
+          <div className="container">
+            <div className="section-heading">
+              <p className="eyebrow">Why BookAgent.gr</p>
+              <h2>A practical setup for businesses that run on appointments.</h2>
+            </div>
+
+            <div className="card-grid three">
+              {reasons.map((reason) => (
+                <article className="feature-card" key={reason.title}>
+                  <div className="feature-icon" aria-hidden="true">
+                    ✦
+                  </div>
+                  <h3>{reason.title}</h3>
+                  <p>{reason.text}</p>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section id="services" className="section services-section">
+          <div className="container">
+            <div className="section-heading split">
+              <div>
+                <p className="eyebrow">Services</p>
+                <h2>What we build</h2>
+              </div>
+              <p>
+                Start with a focused website, add a better booking flow, or combine everything into
+                one launch-ready setup.
+              </p>
+            </div>
+
+            <div className="service-grid">
+              {services.map((service) => (
+                <article className="service-card" key={service.title}>
+                  <div>
+                    <p className="service-price">{service.price}</p>
+                    <h3>{service.title}</h3>
+                    <p>{service.text}</p>
+                  </div>
+
+                  <ul>
+                    {service.points.map((point) => (
+                      <li key={point}>{point}</li>
+                    ))}
+                  </ul>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="section industries-section">
+          <div className="container">
+            <div className="section-heading">
+              <p className="eyebrow">Industries</p>
+              <h2>Made for appointment-based businesses in Greece.</h2>
+            </div>
+
+            <div className="industry-grid">
+              {industries.map((industry) => (
+                <div className="industry-pill" key={industry}>
+                  {industry}
+                </div>
+              ))}
+            </div>
+
+            <p className="industry-note">
+              Don’t see your industry? If your business depends on appointments, we can build
+              around it.
+            </p>
+          </div>
+        </section>
+
+        <section id="process" className="section process-section">
+          <div className="container">
+            <div className="section-heading split">
+              <div>
+                <p className="eyebrow">Process</p>
+                <h2>How we work</h2>
+              </div>
+              <p>
+                A clear path from consultation to launch, without overcomplicating the technology.
+              </p>
+            </div>
+
+            <div className="steps">
+              {steps.map((step) => (
+                <article className="step-card" key={step.number}>
+                  <span>{step.number}</span>
+                  <h3>{step.title}</h3>
+                  <p>{step.text}</p>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section id="ai-receptionist" className="section ai-section">
+          <div className="container ai-panel">
+            <div>
+              <p className="eyebrow">AI Receptionist</p>
+              <h2>Never miss another customer inquiry.</h2>
+              <p>
+                The AI receptionist can help with missed calls, DMs, FAQs, appointment requests,
+                after-hours leads, and basic customer information. It is designed to support your
+                team, not replace the human service your customers expect.
+              </p>
+              <a className="button button-primary" href="#contact">
+                Ask About AI Receptionist
+              </a>
+            </div>
+
+            <div className="ai-feature-list" aria-label="AI receptionist use cases">
+              {aiFeatures.map((feature) => (
+                <div key={feature}>
+                  <span aria-hidden="true">✓</span>
+                  {feature}
                 </div>
               ))}
             </div>
           </div>
-
-          <aside className="hero-panel" aria-label="Key message">
-            <div className="hero-art" aria-hidden="true">
-              <div className="hero-art-orbit">
-                <span></span>
-                <span></span>
-                <span></span>
-              </div>
-              <div className="hero-art-core">
-                <strong>Book smarter</strong>
-                <span>website + AI receptionist</span>
-              </div>
-            </div>
-            <div className="panel-hero">
-              <p className="panel-kicker">Built for businesses that book by phone, DM, search, or message</p>
-              <p className="panel-title">A cleaner online presence that looks credible, answers faster, and removes friction.</p>
-            </div>
-            <div className="panel-grid">
-              <div className="panel-card">
-                <span>01</span>
-                <strong>Professional website</strong>
-                <p>Show services, hours, and contact paths in a way customers can scan quickly.</p>
-              </div>
-              <div className="panel-card">
-                <span>02</span>
-                <strong>AI receptionist</strong>
-                <p>Handle the common questions and booking details that arrive after hours or during busy periods.</p>
-              </div>
-              <div className="panel-card">
-                <span>03</span>
-                <strong>More bookings</strong>
-                <p>Guide visitors toward an appointment request instead of leaving them unsure what to do next.</p>
-              </div>
-            </div>
-          </aside>
-        </div>
-      </header>
-
-      <main>
-        <section className="section" id="problem">
-          <div className="section-heading">
-            <p className="eyebrow">Problem</p>
-            <h2>Slow replies and unclear websites lose good leads.</h2>
-          </div>
-          <div className="content-card">
-            <p>
-              Many small businesses lose leads because the website does not explain the service clearly enough, or
-              because a customer has to wait too long for a reply.
-            </p>
-            <p>
-              Today’s customers expect a simple service page, quick answers, and a direct way to book or contact you
-              without friction.
-            </p>
-            <p>
-              BookAgent.gr helps your business turn those missed moments into real appointment requests.
-            </p>
-          </div>
         </section>
 
-        <section className="section" id="services">
-          <div className="section-heading">
-            <p className="eyebrow">Services</p>
-            <h2>What we build for appointment-based businesses.</h2>
-          </div>
-          <div className="services-grid">
-            {services.map((service) => (
-              <article className="service-card" key={service.title}>
-                <h3>{service.title}</h3>
-                <p>{service.description}</p>
-              </article>
-            ))}
-          </div>
-        </section>
-
-        <section className="section">
-          <div className="section-heading">
-            <p className="eyebrow">Who It’s For</p>
-            <h2>Designed for businesses that depend on bookings.</h2>
-          </div>
-          <div className="audience-grid">
-            {audiences.map((audience) => (
-              <div className="pill" key={audience}>
-                {audience}
-              </div>
-            ))}
-          </div>
-        </section>
-
-        <section className="section">
-          <div className="section-heading">
-            <p className="eyebrow">How It Works</p>
-            <h2>Consultation → Website/flow design → AI receptionist setup → Launch & support</h2>
-          </div>
-          <div className="steps-grid">
-            {steps.map((step, index) => (
-              <article className="step-card" key={step}>
-                <span className="step-number">0{index + 1}</span>
-                <p>{step}</p>
-              </article>
-            ))}
-          </div>
-        </section>
-
-        <section className="section">
-          <div className="section-heading">
-            <p className="eyebrow">Packages</p>
-            <h2>Clear offers without fixed prices yet.</h2>
-          </div>
-          <div className="content-card">
-            <p>
-              Every business has different booking volume, customer flow, and service needs. We shape the solution
-              around your goals instead of forcing you into a one-size-fits-all package.
-            </p>
-            <ul className="bullet-list">
-              <li>Website Starter</li>
-              <li>Website + Booking Flow</li>
-              <li>AI Receptionist Setup</li>
-              <li>Complete BookAgent Setup</li>
-            </ul>
-          </div>
-        </section>
-
-        <section className="section">
-          <div className="section-heading">
-            <p className="eyebrow">Why BookAgent.gr</p>
-            <h2>Clear structure, faster replies, more appointments.</h2>
-          </div>
-          <div className="spotlight-card">
-            <p className="spotlight-kicker">AI Receptionist spotlight</p>
-            <h3>Never miss another customer inquiry.</h3>
-            <p>
-              Keep conversations moving when calls are missed, DMs come in after hours, or your team is busy. The AI
-              receptionist helps collect the right details so more people are ready to book.
-            </p>
-          </div>
-          <div className="trust-grid">
-            <article className="service-card">
-              <h3>Sharper first impression</h3>
-              <p>Your site looks more credible, more modern, and more aligned with the level of service you offer.</p>
-            </article>
-            <article className="service-card">
-              <h3>Faster customer response</h3>
-              <p>AI receptionists help keep conversations moving so opportunities do not disappear while you are busy.</p>
-            </article>
-            <article className="service-card">
-              <h3>More booking-ready leads</h3>
-              <p>Clear structure, strong messaging, and a focused CTA help more visitors take the next step.</p>
-            </article>
-          </div>
-          <div className="content-card">
-            <p>
-              BookAgent.gr combines modern web design with practical AI tools for service businesses that cannot afford
-              to miss calls, DMs, or appointment requests.
-            </p>
-            <p>
-              You do not need to understand complicated technology. The goal is simple: make your business easier to
-              trust, easier to contact, and easier to book.
-            </p>
-          </div>
-        </section>
-
-        <section className="section cta-band" aria-label="Call to action">
-          <div className="cta-card">
-            <div>
-              <p className="eyebrow">Ready to stop losing leads?</p>
-              <h2>Let’s build the website and AI support your business actually needs.</h2>
-              <p className="cta-note">One clear message. One clear next step. Less friction for customers who want to book.</p>
-            </div>
-            <a className="button button-primary" href="#contact">
+        <section className="cta-band">
+          <div className="container cta-inner">
+            <h2>Your next customer should not get lost in a missed call or unclear website.</h2>
+            <a className="button button-light" href="#contact">
               Request a Free Consultation
             </a>
           </div>
         </section>
 
-        <section className="section">
-          <div className="section-heading">
-            <p className="eyebrow">FAQ</p>
-            <h2>Common questions.</h2>
-          </div>
-          <div className="faq-grid">
-            {faqs.map((faq) => (
-              <article className="faq-card" key={faq.question}>
-                <h3>{faq.question}</h3>
-                <p>{faq.answer}</p>
-              </article>
-            ))}
+        <section className="section faq-section">
+          <div className="container">
+            <div className="section-heading">
+              <p className="eyebrow">FAQ</p>
+              <h2>Questions before we start</h2>
+            </div>
+
+            <div className="faq-list">
+              {faqs.map((faq) => (
+                <details key={faq.question} className="faq-item">
+                  <summary>{faq.question}</summary>
+                  <p>{faq.answer}</p>
+                </details>
+              ))}
+            </div>
           </div>
         </section>
 
-        <section className="section contact-section" id="contact">
-          <div className="section-heading">
-            <p className="eyebrow">Contact</p>
-            <h2>Tell us what kind of bookings you want more of.</h2>
-          </div>
-          <div className="contact-grid">
-            <div className="content-card contact-copy">
-              <p className="contact-eyebrow">Simple, direct, and built to convert.</p>
+        <section id="contact" className="section contact-section">
+          <div className="container contact-grid">
+            <div>
+              <p className="eyebrow">Contact</p>
+              <h2>Request a free consultation</h2>
               <p>
-                Tell us a little about your business and what you need. We will review your request and contact you
-                with the best next step.
+                Tell us what kind of appointment-based business you run and what you want to improve:
+                your website, your booking flow, your response speed, or the full setup.
               </p>
-              <div className="contact-list">
-                <div>
-                  <strong>Fast review</strong>
-                  <p>We look at your business and the type of setup that fits best.</p>
-                </div>
-                <div>
-                  <strong>Clear recommendation</strong>
-                  <p>You get the next best step without unnecessary back-and-forth.</p>
-                </div>
+
+              <div className="contact-card">
+                <strong>Email</strong>
+                <a href="mailto:hello@bookagent.gr">hello@bookagent.gr</a>
               </div>
             </div>
 
             <form className="contact-form" onSubmit={handleSubmit}>
-              {submissionState === 'success' ? (
-                <p className="form-success" role="status" aria-live="polite">
-                  Thanks. Your request was saved and we’ll follow up with the next step.
-                </p>
-              ) : null}
-              <label>
-                Name
-                <input type="text" name="name" placeholder="Your name" />
-              </label>
-              <label>
-                Business name
-                <input type="text" name="businessName" placeholder="Business name" />
-              </label>
-              <label>
-                Email
-                <input type="email" name="email" placeholder="you@example.com" />
-              </label>
-              <label>
-                Phone number
-                <input type="tel" name="phone" placeholder="+30 ..." />
-              </label>
-              <label>
-                Business type
-                <input type="text" name="businessType" placeholder="Barbershop, clinic, salon..." />
-              </label>
-              <label>
-                Service interested in
-                <input type="text" name="service" placeholder="Website, AI booking agent, complete setup" />
-              </label>
-              <label>
-                Message
-                <textarea name="message" rows={5} placeholder="Tell us a little about what you need" />
-              </label>
-              <button className="button button-primary" type="submit">
-                Submit Request
+              <div className="form-row">
+                <label htmlFor="name">Name</label>
+                <input id="name" name="name" type="text" autoComplete="name" required />
+              </div>
+
+              <div className="form-row">
+                <label htmlFor="businessName">Business name</label>
+                <input id="businessName" name="businessName" type="text" required />
+              </div>
+
+              <div className="form-row two-columns">
+                <div>
+                  <label htmlFor="email">Email</label>
+                  <input id="email" name="email" type="email" autoComplete="email" required />
+                </div>
+
+                <div>
+                  <label htmlFor="phone">Phone</label>
+                  <input id="phone" name="phone" type="tel" autoComplete="tel" />
+                </div>
+              </div>
+
+              <div className="form-row">
+                <label htmlFor="businessType">Business type</label>
+                <input
+                  id="businessType"
+                  name="businessType"
+                  type="text"
+                  placeholder="e.g. dental clinic, barbershop, beauty salon"
+                  required
+                />
+              </div>
+
+              <div className="form-row">
+                <label htmlFor="interest">Interested in</label>
+                <select id="interest" name="interest" defaultValue="Complete setup" required>
+                  <option>Website</option>
+                  <option>AI Receptionist</option>
+                  <option>Complete setup</option>
+                </select>
+              </div>
+
+              <div className="form-row">
+                <label htmlFor="message">Message</label>
+                <textarea
+                  id="message"
+                  name="message"
+                  rows={5}
+                  placeholder="Tell us what you want to improve."
+                />
+              </div>
+
+              <button className="button button-primary form-button" type="submit">
+                Send request
               </button>
+
+              {submitted && (
+                <p className="success-message" role="status">
+                  Thank you. Your request has been received.
+                </p>
+              )}
             </form>
           </div>
         </section>
       </main>
+
+      <footer className="site-footer">
+        <div className="container footer-grid">
+          <div>
+            <a className="logo footer-logo" href="#top">
+              BookAgent.gr
+            </a>
+            <p>Websites and AI receptionist setups for appointment-based businesses in Greece.</p>
+          </div>
+
+          <div className="footer-links">
+            <a href="#services">Services</a>
+            <a href="#process">Process</a>
+            <a href="#ai-receptionist">AI Receptionist</a>
+            <a href="#contact">Contact</a>
+          </div>
+
+          <div className="footer-contact">
+            <a href="mailto:hello@bookagent.gr">hello@bookagent.gr</a>
+            <span>© 2026 BookAgent.gr</span>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }
