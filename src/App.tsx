@@ -7,9 +7,20 @@ type Card = {
 
 type Service = {
   title: string;
-  price: string;
+  label: string;
   text: string;
   points: string[];
+};
+
+type PricingPlan = {
+  title: string;
+  price: string;
+  period: string;
+  description: string;
+  badge?: string;
+  featured?: boolean;
+  features: string[];
+  footer: string;
 };
 
 type Step = {
@@ -25,6 +36,7 @@ type FAQ = {
 
 const navLinks = [
   { label: 'Services', href: '#services' },
+  { label: 'Pricing', href: '#pricing' },
   { label: 'Process', href: '#process' },
   { label: 'AI Receptionist', href: '#ai-receptionist' },
   { label: 'Contact', href: '#contact' }
@@ -78,28 +90,93 @@ const reasons: Card[] = [
   }
 ];
 
+const pricingPlans: PricingPlan[] = [
+  {
+    title: 'Landing Page',
+    price: 'From €450',
+    period: 'one-time project',
+    description:
+      'A focused one-page website built to present your business clearly and turn visitors into appointment requests.',
+    features: [
+      'Premium responsive landing page',
+      'Service-focused sections',
+      'Clear appointment CTA',
+      'Basic SEO structure',
+      'Contact form included'
+    ],
+    footer: 'Best for businesses that need a clean, fast online presence.'
+  },
+  {
+    title: 'Website up to 5 Pages',
+    price: 'From €950',
+    period: 'one-time project',
+    description:
+      'A complete website for businesses that need more structure, trust-building content, and a stronger customer journey.',
+    features: [
+      'Up to 5 core pages',
+      'Home, Services, About, FAQ, Contact',
+      'Conversion-focused copy structure',
+      'Mobile-first design',
+      'Launch-ready setup'
+    ],
+    footer: 'Best for clinics, salons, studios, restaurants, and service businesses.'
+  },
+  {
+    title: 'AI Agent Setup',
+    price: '€350 setup',
+    period: '+ €120/month',
+    description:
+      'AI receptionist setup that can help with FAQs, lead capture, missed inquiries, and appointment requests.',
+    features: [
+      'Business information setup',
+      'FAQ and lead capture flow',
+      'Appointment request handling',
+      'Greek and English support',
+      'Monthly support and improvements'
+    ],
+    footer: 'Best for teams that miss calls, DMs, or after-hours inquiries.'
+  },
+  {
+    title: 'Complete BookAgent Setup',
+    price: 'From €1,450',
+    period: '+ optional monthly support',
+    description:
+      'The premium full setup: website, booking journey, AI receptionist, launch support, and ongoing improvement path.',
+    badge: 'Best overall value',
+    featured: true,
+    features: [
+      'Landing page or multi-page website',
+      'Booking-focused customer journey',
+      'AI receptionist configuration',
+      'Contact and lead capture flow',
+      'Launch support included'
+    ],
+    footer: 'Best for serious appointment-based businesses that want the full system.'
+  }
+];
+
 const services: Service[] = [
   {
     title: 'Website Presence',
-    price: 'From €___',
+    label: 'Website',
     text: 'A clean one-page website for businesses that need a professional online presence.',
     points: ['Responsive one-page design', 'Service overview', 'Contact-focused layout']
   },
   {
     title: 'Website + Booking Flow',
-    price: 'Custom quote',
+    label: 'Booking flow',
     text: 'A website structured around services, trust, contact, and appointment requests.',
     points: ['Conversion-focused sections', 'Booking request flow', 'Trust and FAQ content']
   },
   {
     title: 'AI Receptionist Setup',
-    price: 'Custom quote',
+    label: 'AI support',
     text: 'AI support that helps answer FAQs, collect details, and handle booking requests.',
     points: ['FAQ handling', 'Lead detail collection', 'After-hours inquiry support']
   },
   {
     title: 'Complete BookAgent Setup',
-    price: 'Custom quote',
+    label: 'Full setup',
     text: 'Website, booking flow, AI receptionist, and launch support together.',
     points: ['Website build', 'AI receptionist setup', 'Launch and improvement support']
   }
@@ -188,6 +265,8 @@ function App() {
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+
+    // Later this form should be connected to Formspree, email, Supabase, or another backend.
     setSubmitted(true);
   }
 
@@ -339,6 +418,61 @@ function App() {
           </div>
         </section>
 
+        <section id="pricing" className="section pricing-section">
+          <div className="container">
+            <div className="section-heading split">
+              <div>
+                <p className="eyebrow">Pricing</p>
+                <h2>Simple packages for appointment-focused businesses.</h2>
+              </div>
+              <p>
+                Start with a focused website, add an AI receptionist, or choose the complete setup
+                when you want everything working together from day one.
+              </p>
+            </div>
+
+            <div className="pricing-grid">
+              {pricingPlans.map((plan) => (
+                <article
+                  className={`pricing-card${plan.featured ? ' featured' : ''}`}
+                  key={plan.title}
+                >
+                  {plan.badge && <span className="pricing-badge">{plan.badge}</span>}
+
+                  <div>
+                    <h3>{plan.title}</h3>
+
+                    <div className="pricing-price">
+                      <strong>{plan.price}</strong>
+                      <span>{plan.period}</span>
+                    </div>
+
+                    <p>{plan.description}</p>
+                  </div>
+
+                  <ul>
+                    {plan.features.map((feature) => (
+                      <li key={feature}>{feature}</li>
+                    ))}
+                  </ul>
+
+                  <div className="pricing-footer">
+                    <p>{plan.footer}</p>
+                    <a className="button button-primary" href="#contact">
+                      Request this package
+                    </a>
+                  </div>
+                </article>
+              ))}
+            </div>
+
+            <p className="pricing-disclaimer">
+              Demo pricing shown for now. Final pricing depends on business type, pages, booking
+              flow, AI receptionist needs, integrations, and launch support.
+            </p>
+          </div>
+        </section>
+
         <section id="services" className="section services-section">
           <div className="container">
             <div className="section-heading split">
@@ -356,7 +490,7 @@ function App() {
               {services.map((service) => (
                 <article className="service-card" key={service.title}>
                   <div>
-                    <p className="service-price">{service.price}</p>
+                    <p className="service-price">{service.label}</p>
                     <h3>{service.title}</h3>
                     <p>{service.text}</p>
                   </div>
@@ -524,7 +658,8 @@ function App() {
               <div className="form-row">
                 <label htmlFor="interest">Interested in</label>
                 <select id="interest" name="interest" defaultValue="Complete setup" required>
-                  <option>Website</option>
+                  <option>Landing Page</option>
+                  <option>Website up to 5 Pages</option>
                   <option>AI Receptionist</option>
                   <option>Complete setup</option>
                 </select>
@@ -541,7 +676,7 @@ function App() {
               </div>
 
               <button className="button button-primary form-button" type="submit">
-                Send request
+                Request My Free Consultation
               </button>
 
               {submitted && (
@@ -565,6 +700,7 @@ function App() {
 
           <div className="footer-links">
             <a href="#services">Services</a>
+            <a href="#pricing">Pricing</a>
             <a href="#process">Process</a>
             <a href="#ai-receptionist">AI Receptionist</a>
             <a href="#contact">Contact</a>
