@@ -23,6 +23,16 @@ type PricingPlan = {
   footer: string;
 };
 
+type DemoBuild = {
+  industry: string;
+  title: string;
+  description: string;
+  tags: string[];
+  previewTitle: string;
+  previewSections: string[];
+  url?: string;
+};
+
 type Step = {
   number: string;
   title: string;
@@ -37,6 +47,7 @@ type FAQ = {
 const navLinks = [
   { label: 'Services', href: '#services' },
   { label: 'Pricing', href: '#pricing' },
+  { label: 'Demos', href: '#demos' },
   { label: 'Process', href: '#process' },
   { label: 'AI Receptionist', href: '#ai-receptionist' },
   { label: 'Contact', href: '#contact' }
@@ -152,6 +163,45 @@ const pricingPlans: PricingPlan[] = [
       'Launch support included'
     ],
     footer: 'Best for serious appointment-based businesses that want the full system.'
+  }
+];
+
+const demoBuilds: DemoBuild[] = [
+  {
+    industry: 'Dentist Demo',
+    title: 'Dental Clinic Website Concept',
+    description:
+      'A trust-focused concept for dental clinics that need to explain treatments, answer patient questions, and make appointment requests easier.',
+    tags: ['Healthcare', 'Trust-focused', 'FAQ flow'],
+    previewTitle: 'DentalCare Demo',
+    previewSections: ['Treatments', 'Patient trust', 'Appointment request']
+  },
+  {
+    industry: 'Hair Salon Demo',
+    title: 'Hair Salon Booking Website Concept',
+    description:
+      'A stylish mobile-first concept for salons that want to showcase services, prices, transformations, and booking calls-to-action.',
+    tags: ['Beauty', 'Mobile-first', 'Booking CTA'],
+    previewTitle: 'SalonStyle Demo',
+    previewSections: ['Services', 'Gallery', 'Book a visit']
+  },
+  {
+    industry: 'Lawyer Demo',
+    title: 'Law Firm Consultation Website Concept',
+    description:
+      'A professional concept for lawyers and legal offices that need to build credibility, explain practice areas, and encourage consultation requests.',
+    tags: ['Professional services', 'Consultations', 'Credibility'],
+    previewTitle: 'LegalOffice Demo',
+    previewSections: ['Practice areas', 'About the firm', 'Request consultation']
+  },
+  {
+    industry: 'Electrician Demo',
+    title: 'Electrician Service Website Concept',
+    description:
+      'A fast-response concept for electricians who need to capture urgent inquiries, collect job details, and make it easy for customers to request help.',
+    tags: ['Home services', 'Urgent inquiries', 'Lead capture'],
+    previewTitle: 'ElectricPro Demo',
+    previewSections: ['Emergency help', 'Services', 'Request a call']
   }
 ];
 
@@ -473,6 +523,85 @@ function App() {
           </div>
         </section>
 
+        <section id="demos" className="section demos-section">
+          <div className="container">
+            <div className="section-heading split">
+              <div>
+                <p className="eyebrow">Demo Builds</p>
+                <h2>Proof-of-work concepts for appointment-based businesses.</h2>
+              </div>
+              <p>
+                Explore concept websites built by BookAgent.gr to show how different businesses can
+                present services, build trust, collect inquiries, and guide visitors toward bookings.
+              </p>
+            </div>
+
+            <div className="demo-grid">
+              {demoBuilds.map((demo) => (
+                <article className="demo-card" key={demo.title}>
+                  <div className="demo-preview" aria-label={`${demo.title} preview`}>
+                    <div className="demo-browser-bar" aria-hidden="true">
+                      <span />
+                      <span />
+                      <span />
+                    </div>
+
+                    <div className="demo-preview-content">
+                      <p>{demo.industry}</p>
+                      <strong>{demo.previewTitle}</strong>
+
+                      <div className="demo-preview-lines">
+                        {demo.previewSections.map((section) => (
+                          <span key={section}>{section}</span>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="demo-content">
+                    <p className="demo-industry">{demo.industry}</p>
+                    <h3>{demo.title}</h3>
+                    <p>{demo.description}</p>
+
+                    <div className="demo-tags" aria-label={`${demo.title} tags`}>
+                      {demo.tags.map((tag) => (
+                        <span key={tag}>{tag}</span>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="demo-actions">
+                    {demo.url ? (
+                      <a
+                        className="button button-secondary"
+                        href={demo.url}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        View Demo
+                      </a>
+                    ) : (
+                      <span className="button button-secondary demo-disabled" aria-disabled="true">
+                        Demo coming soon
+                      </span>
+                    )}
+
+                    <a className="button button-primary" href="#contact">
+                      Build Something Similar
+                    </a>
+                  </div>
+                </article>
+              ))}
+            </div>
+
+            <p className="demo-note">
+              Demo builds are concept projects created by BookAgent.gr to showcase design direction,
+              structure, messaging, and booking-focused strategy. They are not presented as client
+              case studies.
+            </p>
+          </div>
+        </section>
+
         <section id="services" className="section services-section">
           <div className="container">
             <div className="section-heading split">
@@ -650,7 +779,7 @@ function App() {
                   id="businessType"
                   name="businessType"
                   type="text"
-                  placeholder="e.g. dental clinic, barbershop, beauty salon"
+                  placeholder="e.g. dental clinic, hair salon, law firm"
                   required
                 />
               </div>
@@ -701,6 +830,7 @@ function App() {
           <div className="footer-links">
             <a href="#services">Services</a>
             <a href="#pricing">Pricing</a>
+            <a href="#demos">Demos</a>
             <a href="#process">Process</a>
             <a href="#ai-receptionist">AI Receptionist</a>
             <a href="#contact">Contact</a>
