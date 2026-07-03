@@ -45,20 +45,18 @@ type FAQ = {
 };
 
 type Outcome = {
-  value: string;
-  label: string;
-  detail: string;
+  marker: string;
+  title: string;
+  text: string;
 };
 
-type Testimonial = {
-  quote: string;
-  name: string;
-  role: string;
+type FormspreeErrorResponse = {
+  errors?: Array<{ message: string }>;
 };
 
 const navLinks = [
   { label: 'Services', href: '#services' },
-  { label: 'Results', href: '#results' },
+  { label: 'Outcomes', href: '#results' },
   { label: 'Pricing', href: '#pricing' },
   { label: 'Demos', href: '#demos' },
   { label: 'Process', href: '#process' },
@@ -111,6 +109,29 @@ const reasons: Card[] = [
   {
     title: 'AI support after hours',
     text: 'AI assistance can help answer common questions, collect details, and keep new inquiries moving.'
+  }
+];
+
+const outcomes: Outcome[] = [
+  {
+    marker: '01',
+    title: 'Clearer services',
+    text: 'Help visitors quickly understand what you offer, who it is for, and how to take the next step.'
+  },
+  {
+    marker: '02',
+    title: 'Faster inquiry capture',
+    text: 'Make it easier to collect names, contact details, service needs, and preferred appointment times.'
+  },
+  {
+    marker: '03',
+    title: 'Better after-hours response',
+    text: 'Use AI support to help with common questions and appointment requests when your team is unavailable.'
+  },
+  {
+    marker: '04',
+    title: 'Less back-and-forth',
+    text: 'Structure the website and inquiry flow so customers provide better details from the start.'
   }
 ];
 
@@ -322,54 +343,6 @@ const faqs: FAQ[] = [
       'Pricing depends on the website scope, booking flow, AI receptionist needs, and launch support. The first step is a free consultation to understand what your business actually needs.'
   }
 ];
-
-const outcomes: Outcome[] = [
-  {
-    value: '24/7',
-    label: 'Inquiry Coverage',
-    detail: 'Capture leads after-hours and while your team is busy with customers.'
-  },
-  {
-    value: '< 1 day',
-    label: 'First Website Draft',
-    detail: 'Fast launch-focused build process for appointment businesses.'
-  },
-  {
-    value: '2 languages',
-    label: 'Greek + English',
-    detail: 'Support local customers and tourists in the same booking flow.'
-  },
-  {
-    value: '1 system',
-    label: 'Website + AI + Booking',
-    detail: 'One connected setup instead of fragmented tools and missed requests.'
-  }
-];
-
-const testimonials: Testimonial[] = [
-  {
-    quote:
-      'The new page made our services easier to understand, and inquiries now come with better details so we can respond faster.',
-    name: 'Maria K.',
-    role: 'Beauty Studio Owner, Athens'
-  },
-  {
-    quote:
-      'Before this, we missed messages in the evenings. Now requests are captured and organized so mornings start with clear follow-ups.',
-    name: 'Nikos P.',
-    role: 'Dental Practice Manager, Thessaloniki'
-  },
-  {
-    quote:
-      'The structure is simple for customers and simple for our staff. More serious leads, fewer back-and-forth messages.',
-    name: 'Eleni S.',
-    role: 'Law Office Operations Lead, Patras'
-  }
-];
-
-type FormspreeErrorResponse = {
-  errors?: Array<{ message: string }>;
-};
 
 function App() {
   const [submitState, setSubmitState] = useState<'idle' | 'submitting' | 'success' | 'error'>(
@@ -586,34 +559,30 @@ function App() {
           <div className="container">
             <div className="section-heading split">
               <div>
-                <p className="eyebrow">Results & Trust</p>
-                <h2>Built to move more visitors into real appointment conversations.</h2>
+                <p className="eyebrow">Outcomes</p>
+                <h2>What this setup is designed to improve.</h2>
               </div>
               <p>
-                Businesses need more than a beautiful page. They need a website and response system
-                that captures intent quickly and turns interest into action.
+                A BookAgent.gr setup is built around one goal: helping appointment-based businesses
+                turn more interest into real conversations and appointment requests.
               </p>
             </div>
 
-            <div className="outcome-grid" aria-label="Business outcomes">
+            <div className="outcome-grid" aria-label="Designed improvements">
               {outcomes.map((outcome) => (
-                <article className="outcome-card" key={outcome.label}>
-                  <strong>{outcome.value}</strong>
-                  <span>{outcome.label}</span>
-                  <p>{outcome.detail}</p>
+                <article className="outcome-card" key={outcome.title}>
+                  <strong>{outcome.marker}</strong>
+                  <span>{outcome.title}</span>
+                  <p>{outcome.text}</p>
                 </article>
               ))}
             </div>
 
-            <div className="testimonial-grid" aria-label="Client testimonials">
-              {testimonials.map((testimonial) => (
-                <article className="testimonial-card" key={testimonial.name}>
-                  <p className="testimonial-quote">“{testimonial.quote}”</p>
-                  <p className="testimonial-author">{testimonial.name}</p>
-                  <p className="testimonial-role">{testimonial.role}</p>
-                </article>
-              ))}
-            </div>
+            <p className="trust-note">
+              Client testimonials will be added after real project launches. For now, explore the
+              demo builds below to see the design direction, structure, and booking-focused approach
+              BookAgent.gr can bring to real businesses.
+            </p>
           </div>
         </section>
 
@@ -895,7 +864,7 @@ function App() {
 
               <div className="contact-card">
                 <strong>Email</strong>
-                <a href="mailto:hello@bookagent.gr">hello@bookagent.gr</a>
+                <a href={`mailto:${fallbackEmail}`}>{fallbackEmail}</a>
               </div>
             </div>
 
@@ -964,7 +933,7 @@ function App() {
               </button>
 
               <p className="form-note">
-                Submissions are securely sent to our team. Prefer email?{' '}
+                Submissions are sent to our team when the form endpoint is configured. Prefer email?{' '}
                 <a href={`mailto:${fallbackEmail}`}>{fallbackEmail}</a>
               </p>
 
@@ -995,6 +964,7 @@ function App() {
 
           <div className="footer-links">
             <a href="#services">Services</a>
+            <a href="#results">Outcomes</a>
             <a href="#pricing">Pricing</a>
             <a href="#demos">Demos</a>
             <a href="#process">Process</a>
@@ -1003,7 +973,7 @@ function App() {
           </div>
 
           <div className="footer-contact">
-            <a href="mailto:hello@bookagent.gr">hello@bookagent.gr</a>
+            <a href={`mailto:${fallbackEmail}`}>{fallbackEmail}</a>
             <span>© 2026 BookAgent.gr</span>
           </div>
         </div>
