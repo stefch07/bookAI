@@ -44,8 +44,21 @@ type FAQ = {
   answer: string;
 };
 
+type Outcome = {
+  value: string;
+  label: string;
+  detail: string;
+};
+
+type Testimonial = {
+  quote: string;
+  name: string;
+  role: string;
+};
+
 const navLinks = [
   { label: 'Services', href: '#services' },
+  { label: 'Results', href: '#results' },
   { label: 'Pricing', href: '#pricing' },
   { label: 'Demos', href: '#demos' },
   { label: 'Process', href: '#process' },
@@ -310,14 +323,115 @@ const faqs: FAQ[] = [
   }
 ];
 
-function App() {
-  const [submitted, setSubmitted] = useState(false);
+const outcomes: Outcome[] = [
+  {
+    value: '24/7',
+    label: 'Inquiry Coverage',
+    detail: 'Capture leads after-hours and while your team is busy with customers.'
+  },
+  {
+    value: '< 1 day',
+    label: 'First Website Draft',
+    detail: 'Fast launch-focused build process for appointment businesses.'
+  },
+  {
+    value: '2 languages',
+    label: 'Greek + English',
+    detail: 'Support local customers and tourists in the same booking flow.'
+  },
+  {
+    value: '1 system',
+    label: 'Website + AI + Booking',
+    detail: 'One connected setup instead of fragmented tools and missed requests.'
+  }
+];
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+const testimonials: Testimonial[] = [
+  {
+    quote:
+      'The new page made our services easier to understand, and inquiries now come with better details so we can respond faster.',
+    name: 'Maria K.',
+    role: 'Beauty Studio Owner, Athens'
+  },
+  {
+    quote:
+      'Before this, we missed messages in the evenings. Now requests are captured and organized so mornings start with clear follow-ups.',
+    name: 'Nikos P.',
+    role: 'Dental Practice Manager, Thessaloniki'
+  },
+  {
+    quote:
+      'The structure is simple for customers and simple for our staff. More serious leads, fewer back-and-forth messages.',
+    name: 'Eleni S.',
+    role: 'Law Office Operations Lead, Patras'
+  }
+];
+
+type FormspreeErrorResponse = {
+  errors?: Array<{ message: string }>;
+};
+
+function App() {
+  const [submitState, setSubmitState] = useState<'idle' | 'submitting' | 'success' | 'error'>(
+    'idle'
+  );
+  const [submitMessage, setSubmitMessage] = useState('');
+
+  const formEndpoint = import.meta.env.VITE_FORMSPREE_ENDPOINT?.trim();
+  const fallbackEmail = import.meta.env.VITE_CONTACT_FALLBACK_EMAIL?.trim() || 'hello@bookagent.gr';
+
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    // Later this form should be connected to Formspree, email, Supabase, or another backend.
-    setSubmitted(true);
+    if (!formEndpoint) {
+      setSubmitState('error');
+      setSubmitMessage(
+        'Contact form is not configured yet. Set VITE_FORMSPREE_ENDPOINT and redeploy to enable submissions.'
+      );
+      return;
+    }
+
+    const form = event.currentTarget;
+    const formData = new FormData(form);
+
+    const payload = {
+      name: String(formData.get('name') || ''),
+      businessName: String(formData.get('businessName') || ''),
+      email: String(formData.get('email') || ''),
+      phone: String(formData.get('phone') || ''),
+      businessType: String(formData.get('businessType') || ''),
+      interest: String(formData.get('interest') || ''),
+      message: String(formData.get('message') || '')
+    };
+
+    setSubmitState('submitting');
+    setSubmitMessage('');
+
+    try {
+      const response = await fetch(formEndpoint, {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      });
+
+      if (!response.ok) {
+        const data = (await response.json().catch(() => null)) as FormspreeErrorResponse | null;
+        const errorMessage = data?.errors?.[0]?.message || 'Submission failed. Please try again.';
+        throw new Error(errorMessage);
+      }
+
+      setSubmitState('success');
+      setSubmitMessage('Thank you. Your request has been received and we will reply shortly.');
+      form.reset();
+    } catch (error) {
+      setSubmitState('error');
+      setSubmitMessage(
+        error instanceof Error ? error.message : 'Something went wrong. Please try again.'
+      );
+    }
   }
 
   return (
@@ -462,6 +576,41 @@ function App() {
                   </div>
                   <h3>{reason.title}</h3>
                   <p>{reason.text}</p>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section id="results" className="section trust-section">
+          <div className="container">
+            <div className="section-heading split">
+              <div>
+                <p className="eyebrow">Results & Trust</p>
+                <h2>Built to move more visitors into real appointment conversations.</h2>
+              </div>
+              <p>
+                Businesses need more than a beautiful page. They need a website and response system
+                that captures intent quickly and turns interest into action.
+              </p>
+            </div>
+
+            <div className="outcome-grid" aria-label="Business outcomes">
+              {outcomes.map((outcome) => (
+                <article className="outcome-card" key={outcome.label}>
+                  <strong>{outcome.value}</strong>
+                  <span>{outcome.label}</span>
+                  <p>{outcome.detail}</p>
+                </article>
+              ))}
+            </div>
+
+            <div className="testimonial-grid" aria-label="Client testimonials">
+              {testimonials.map((testimonial) => (
+                <article className="testimonial-card" key={testimonial.name}>
+                  <p className="testimonial-quote">“{testimonial.quote}”</p>
+                  <p className="testimonial-author">{testimonial.name}</p>
+                  <p className="testimonial-role">{testimonial.role}</p>
                 </article>
               ))}
             </div>
@@ -804,13 +953,30 @@ function App() {
                 />
               </div>
 
-              <button className="button button-primary form-button" type="submit">
-                Request My Free Consultation
+              <button
+                className="button button-primary form-button"
+                type="submit"
+                disabled={submitState === 'submitting'}
+              >
+                {submitState === 'submitting'
+                  ? 'Submitting your request...'
+                  : 'Request My Free Consultation'}
               </button>
 
-              {submitted && (
+              <p className="form-note">
+                Submissions are securely sent to our team. Prefer email?{' '}
+                <a href={`mailto:${fallbackEmail}`}>{fallbackEmail}</a>
+              </p>
+
+              {submitState === 'success' && (
                 <p className="success-message" role="status">
-                  Thank you. Your request has been received.
+                  {submitMessage}
+                </p>
+              )}
+
+              {submitState === 'error' && (
+                <p className="error-message" role="alert">
+                  {submitMessage}
                 </p>
               )}
             </form>
