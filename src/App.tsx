@@ -208,7 +208,8 @@ const demoBuilds: DemoBuild[] = [
       'A trust-focused concept for dental clinics that need to explain treatments, answer patient questions, and make appointment requests easier.',
     tags: ['Healthcare', 'Trust-focused', 'FAQ flow'],
     previewTitle: 'DentalCare Demo',
-    previewSections: ['Treatments', 'Patient trust', 'Appointment request']
+    previewSections: ['Treatments', 'Patient trust', 'Appointment request'],
+    url: 'https://dentalcare-demo-silk.vercel.app/'
   },
   {
     industry: 'Hair Salon Demo',
